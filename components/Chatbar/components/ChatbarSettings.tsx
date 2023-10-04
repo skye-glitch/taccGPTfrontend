@@ -42,25 +42,29 @@ export const ChatbarSettings = () => {
         <ClearConversations onClearConversations={handleClearConversations} />
       ) : null}
 
-      <Import onImport={handleImportConversations} />
+      {/* <Import onImport={handleImportConversations} /> */}
 
       <SidebarButton
-        text={t('Export data')}
+        // text={t('Export data')}
+        text='Export data'
         icon={<IconFileExport size={18} />}
         onClick={() => handleExportData()}
       />
 
       <SidebarButton
-        text={t('Settings')}
+        // text={t('Settings')}
+        text='Settings'
         icon={<IconSettings size={18} />}
         onClick={() => setIsSettingDialog(true)}
       />
 
+      {/* This is the button of "OpenAI API Key" on the sidebar */}
       {!serverSideApiKeyIsSet ? (
         <Key apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
       ) : null}
 
-      {!serverSidePluginKeysSet ? <PluginKeys /> : null}
+      {/* serverSidePluginKeysSet: Google Search Plugin keys */}
+      {/* {!serverSidePluginKeysSet ? <PluginKeys /> : null} */}
 
       <SettingDialog
         open={isSettingDialogOpen}

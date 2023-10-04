@@ -39,7 +39,7 @@ interface Props {
 }
 
 export const Chat = memo(({ stopConversationRef }: Props) => {
-  const { t } = useTranslation('chat');
+  // const { t } = useTranslation('chat');
 
   const {
     state: {
@@ -124,6 +124,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           signal: controller.signal,
           body,
         });
+        {`body: ${console.log(body)}`}
+        {`response: ${console.log(response)}`}
         if (!response.ok) {
           homeDispatch({ field: 'loading', value: false });
           homeDispatch({ field: 'messageIsStreaming', value: false });
@@ -359,6 +361,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             <div className="mb-2 font-bold">
               Important: Chatbot UI is 100% unaffiliated with OpenAI.
             </div>
+            <div className="mb-2">
+              This will be replaced with TACC GPT backend
+            </div>
           </div>
           <div className="text-center text-gray-500 dark:text-gray-400">
             <div className="mb-2">
@@ -370,12 +375,14 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               with their API.
             </div>
             <div className="mb-2">
-              {t(
+              {/* {t(
                 'Please set your OpenAI API key in the bottom left of the sidebar.',
-              )}
+              )} */}
+              Please set your OpenAI API key in the bottom left of the sidebar.
             </div>
             <div>
-              {t("If you don't have an OpenAI API key, you can get one here: ")}
+              {/* {t("If you don't have an OpenAI API key, you can get one here: ")} */}
+              If you do not have an OpenAI API key, you can get one here: 
               <a
                 href="https://platform.openai.com/account/api-keys"
                 target="_blank"
@@ -398,14 +405,14 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           >
             {selectedConversation?.messages.length === 0 ? (
               <>
-                <div className="mx-auto flex flex-col space-y-5 md:space-y-10 px-3 pt-5 md:pt-12 sm:max-w-[600px]">
+                <div className="mx-auto flex flex-col space-y-5 md:space-y-10 px-3 pt-5 md:pt-12 sm:max-w-[600px] mb-16">
                   <div className="text-center text-3xl font-semibold text-gray-800 dark:text-gray-100">
                     {models.length === 0 ? (
                       <div>
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'Chatbot UI'
+                      'TACC GPT'
                     )}
                   </div>
 
@@ -413,7 +420,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                     <div className="flex h-full flex-col space-y-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-600">
                       <ModelSelect />
 
-                      <SystemPrompt
+                      {/* <SystemPrompt
                         conversation={selectedConversation}
                         prompts={prompts}
                         onChangePrompt={(prompt) =>
@@ -422,10 +429,11 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                             value: prompt,
                           })
                         }
-                      />
+                      /> */}
 
                       <TemperatureSlider
-                        label={t('Temperature')}
+                        // label={t('Temperature')}
+                        label="Temperature"
                         onChangeTemperature={(temperature) =>
                           handleUpdateConversation(selectedConversation, {
                             key: 'temperature',
@@ -440,7 +448,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             ) : (
               <>
                 <div className="sticky top-0 z-10 flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
-                  {t('Model')}: {selectedConversation?.model.name} | {t('Temp')}
+                  {/* {t('Model')}: {selectedConversation?.model.name} | {t('Temp')} */}
+                  {'Model'}: {selectedConversation?.model.name} | {'Temp'}
                   : {selectedConversation?.temperature} |
                   <button
                     className="ml-2 cursor-pointer hover:opacity-50"
