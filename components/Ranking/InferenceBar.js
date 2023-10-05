@@ -15,10 +15,12 @@ const InferenceBar = props => {
     e.preventDefault();
 
     const stateDuration = 1500;
-    const pendingClassName = 'loading_btn--pending';
-    const successClassName = 'loading_btn--success';
-    const failClassName    = 'loading_btn--fail';
-    console.log(document.getElementById("loading_btn_wrapper"))
+    // const pendingClassName = 'loading_btn--pending';
+    // const successClassName = 'loading_btn--success';
+    // const failClassName    = 'loading_btn--fail';
+    const pendingClassName = style.loading_btn__pending;
+    const successClassName = style.loading_btn__success;
+    const failClassName    = style.loading_btn__fail;
     const elem = document.getElementById("loading_btn_wrapper").querySelector("button");
     elem.classList.add(pendingClassName);
 

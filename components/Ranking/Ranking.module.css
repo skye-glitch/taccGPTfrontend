@@ -185,6 +185,8 @@
 }
 
 .submitButton {
+  display: block;
+  align-items: center;
   margin: 1rem;
 }
 
@@ -216,15 +218,15 @@
 .loading_btn, .loading_btn:focus {
   outline: none;
 }
-.loading_btn--pending, .loading_btn--success, .loading_btn--fail {
+.loading_btn__pending, .loading_btn__success, .loading_btn__fail {
   width: 60px;
   pointer-events: none;
   cursor: default;
 }
-.loading_btn--pending .loading_btn__text, .loading_btn--success .loading_btn__text, .loading_btn--fail .loading_btn__text {
+.loading_btn__pending .loading_btn__text, .loading_btn__success .loading_btn__text, .loading_btn__fail .loading_btn__text {
   opacity: 0;
 }
-.loading_btn--pending:before {
+.loading_btn__pending:before {
   content: "";
   position: absolute;
   top: 50%;
@@ -235,13 +237,13 @@
   border: 3px solid rgba(255, 255, 255, 0.33);
   border-top-color: #fff;
   border-radius: 50%;
-  -webkit-animation: loading_btn--fade-in 0.33s ease, loading_btn--rotation 0.66s linear 0s infinite;
-          animation: loading_btn--fade-in 0.33s ease, loading_btn--rotation 0.66s linear 0s infinite;
+  -webkit-animation: loading_btn__fade-in 0.33s ease, loading_btn__rotation 0.66s linear 0s infinite;
+          animation: loading_btn__fade-in 0.33s ease, loading_btn__rotation 0.66s linear 0s infinite;
 }
-.loading_btn--success, .loading_btn--success:hover {
+.loading_btn__success, .loading_btn__success:hover {
   background: #8bc34a;
 }
-.loading_btn--success:after {
+.loading_btn__success:after {
   content: "";
   position: absolute;
   top: 50%;
@@ -253,13 +255,13 @@
   border-top-width: 0;
   border-right-width: 0;
   transform: translate(-50%, -75%) rotate(-45deg);
-  -webkit-animation: loading_btn--fade-in 0.6s ease;
-          animation: loading_btn--fade-in 0.6s ease;
+  -webkit-animation: loading_btn__fade-in 0.6s ease;
+          animation: loading_btn__fade-in 0.6s ease;
 }
-.loading_btn--fail, .loading_btn--fail:hover {
+.loading_btn__fail, .loading_btn__fail:hover {
   background: #ff5722;
 }
-.loading_btn--fail:after {
+.loading_btn__fail:after {
   content: "";
   position: absolute;
   top: 50%;
@@ -269,8 +271,8 @@
   width: 65%;
   background: linear-gradient(to bottom, transparent 44%, #fff 44%, #fff 56%, transparent 56%), linear-gradient(to right, transparent 44%, #fff 44%, #fff 56%, transparent 56%);
   transform: translate(-50%, -50%) rotate(-45deg);
-  -webkit-animation: loading_btn--fade-in 0.6s ease;
-          animation: loading_btn--fade-in 0.6s ease;
+  -webkit-animation: loading_btn__fade-in 0.6s ease;
+          animation: loading_btn__fade-in 0.6s ease;
 }
 .loading_btn__text {
   position: absolute;
@@ -289,7 +291,7 @@
 /**
  * Animations
  */
-@-webkit-keyframes loading_btn--fade-in {
+@-webkit-keyframes loading_btn__fade-in {
   0% {
     opacity: 0;
   }
@@ -297,7 +299,7 @@
     opacity: 1;
   }
 }
-@keyframes loading_btn--fade-in {
+@keyframes loading_btn__fade-in {
   0% {
     opacity: 0;
   }
@@ -305,7 +307,7 @@
     opacity: 1;
   }
 }
-@-webkit-keyframes loading_btn--rotation {
+@-webkit-keyframes loading_btn__rotation {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
   }
@@ -313,7 +315,7 @@
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
-@keyframes loading_btn--rotation {
+@keyframes loading_btn__rotation {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
   }

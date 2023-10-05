@@ -100,11 +100,11 @@ function DragNDrop(props){
   }
 
   function submitRankingResult() {
-    const groups = document.getElementsByClassName("dnd-group");
+    const groups = document.getElementsByClassName(style.dnd_group);
     const rankingResults = {"prompt":props.prompt,"rankings":[],"user":user?user:"Anonymous"};
     let count = 0;
     for(let i = props.numAnswers; i < props.numAnswers*2; i++) {
-      const textareas=groups[i].querySelectorAll("textarea");
+      const textareas=groups[i].querySelectorAll(style.DragNDropApp.textarea);
       const rankingResult = {"rank":i-props.numAnswers+1, "rankingAnswers":[]};
       if(textareas !== null){
         for(let j = 0; j < textareas.length; j++) {
@@ -119,15 +119,15 @@ function DragNDrop(props){
 
     // Send the ranking result to the backend
     // local test w/o nginx: http://localhost:9990/submit_ranking/
-    axios.post('/TACC_GPT/submit_ranking/', 
+    axios.post('/backend/submit_ranking/', 
                rankingResults ).then(res =>{
       const stateDuration = 1500;
-      const pendingClassName = 'loading-btn--pending';
-      const successClassName = 'loading-btn--success';
-      const failClassName    = 'loading-btn--fail';
+      const pendingClassName = style.loading_btn__pending;
+      const successClassName = style.loading_btn__success;
+      const failClassName    = style.loading_btn__fail;
       const classNameToBeAdded = res.data.success?successClassName:failClassName;
-      const elem = document.getElementsByClassName("button-wrapper")[0].querySelector("button");
-      const p = document.getElementsByClassName("submitButton")[0].querySelector("p")
+      const elem = document.getElementsByClassName(style.submitButton)[0].querySelector("button");
+      const p = document.getElementsByClassName(style.submitButton)[0].querySelector("p")
       elem.classList.add(pendingClassName);
 
       // button animation here
@@ -157,8 +157,8 @@ function DragNDrop(props){
   }
 
   const getStyle=(params) => {
-    if(params.wrapIdx === dragItem.current.wrapIdx && params.grpIdx === dragItem.current.grpIdx && params.itemIdx === dragItem.current.itemIdx) return "current dnd-card"
-    return "dnd-card"
+    if(params.wrapIdx === dragItem.current.wrapIdx && params.grpIdx === dragItem.current.grpIdx && params.itemIdx === dragItem.current.itemIdx) return  `${style.current} ${style.dnd_card}`
+    return style.dnd_card
   }
 
   const isAllRanked=(newList) => {
@@ -205,13 +205,13 @@ function DragNDrop(props){
       <div className={`${style.submitButton}`}>
         {<p></p>}
         {/* {show?<button onClick={submitRankingResult}>Submit</button>:null} */}
-        {show?<span className={style.loading_btn_wrapper}>
+        {show?<div className={style.loading_btn_wrapper}>
           <button className={`${style.loading_btn}`}  onClick={submitRankingResult}>
             <span className={style.loading_btn__text}>
               Submit
             </span>
           </button>
-        </span>:null}
+        </div>:null}
       </div>
     </div>
   )
