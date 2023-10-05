@@ -97,6 +97,8 @@
   width: 100%;
   resize: none;
   border-color: white;
+  align-items: center;
+  display: block;
 }
 
 /* textarea:is(:focus, :valid) {
@@ -185,8 +187,8 @@
 }
 
 .submitButton {
-  display: block;
-  align-items: center;
+  width: 100%;
+  text-align: center;
   margin: 1rem;
 }
 

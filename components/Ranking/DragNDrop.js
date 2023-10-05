@@ -202,16 +202,23 @@ function DragNDrop(props){
           </div>
         ))}
       </div>
-      <div className={`${style.submitButton}`}>
+      <div className={`${style.submitButton} w-full text-center`}>
         {<p></p>}
         {/* {show?<button onClick={submitRankingResult}>Submit</button>:null} */}
-        {show?<div className={style.loading_btn_wrapper}>
+        {/* {show?<div className={style.loading_btn_wrapper}>
           <button className={`${style.loading_btn}`}  onClick={submitRankingResult}>
             <span className={style.loading_btn__text}>
               Submit
             </span>
           </button>
-        </div>:null}
+        </div>:null} */}
+        <div className={style.loading_btn_wrapper}>
+          <button className={`${style.loading_btn}`}  onClick={submitRankingResult}>
+            <span className={style.loading_btn__text}>
+              Submit
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   )
