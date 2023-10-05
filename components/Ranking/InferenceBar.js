@@ -15,10 +15,11 @@ const InferenceBar = props => {
     e.preventDefault();
 
     const stateDuration = 1500;
-    const pendingClassName = 'loading-btn--pending';
-    const successClassName = 'loading-btn--success';
-    const failClassName    = 'loading-btn--fail';
-    const elem = document.getElementsByClassName("loading-btn-wrapper")[0].querySelector("button");
+    const pendingClassName = 'loading_btn--pending';
+    const successClassName = 'loading_btn--success';
+    const failClassName    = 'loading_btn--fail';
+    console.log(document.getElementById("loading_btn_wrapper"))
+    const elem = document.getElementById("loading_btn_wrapper").querySelector("button");
     elem.classList.add(pendingClassName);
 
     // for test locally only: http://localhost:9990/submit_prompt/
@@ -93,7 +94,7 @@ const InferenceBar = props => {
            placeholder="Please enter here"
            onChange={(e) => setPrompt(e.target.value)} 
            required/>
-          <div className={style.loading_btn_wrapper}>
+          <div className={style.loading_btn_wrapper} id="loading_btn_wrapper">
             <button className={`${style.loading_btn} `}>
               <span className={style.loading_btn__text}>
                 Run
