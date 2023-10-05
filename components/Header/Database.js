@@ -14,7 +14,7 @@ function Database() {
           <motion.div 
           className="database-group" 
           whileHover={{backgroundColor: "#7b2ff7", color: "#FFFFFF"}}
-          onClick={()=>{router.push("/show_database_qa_pairs")}}>
+          onClick={()=>{router.push("/ShowDatabase/ShowQAPairs")}}>
             <h1>Click me to see all qa_pairs.</h1>
           </motion.div>
 
@@ -23,8 +23,9 @@ function Database() {
           <motion.div 
           className="database-group" 
           whileHover={{backgroundColor: "#FF008C", color: "#FFFFFF"}}
-          onClick={()=>{router.push("/show_database_rankings")}}>
+          onClick={()=>{router.push("/ShowDatabase/ShowRankings")}}>
             <h1>Click me to see all rankings.</h1>
+            
           </motion.div>
       </div>
     </div>

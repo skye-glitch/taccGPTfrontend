@@ -45,12 +45,12 @@ function DropDown() {
       image="/images/database-icon.svg"
     >
       <MenuItem {...item} 
-      onClick={()=>{router.push("/show_database_qa_pairs")}}
+      onClick={()=>{router.push("/ShowDatabase/ShowQAPairs")}}
       >
         QA Pairs
       </MenuItem>
       <MenuItem {...item} 
-      onClick={()=>{router.push("/show_database_rankings")}}
+      onClick={()=>{router.push("/ShowDatabase/ShowRankings")}}
       >
         Rankings
       </MenuItem>
