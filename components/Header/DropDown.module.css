@@ -108,7 +108,7 @@
     0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-.menu-item {
+.menu_item {
   display: flex;
   cursor: default;
   scroll-margin: 0.5rem;
@@ -120,18 +120,18 @@
   letter-spacing: normal;
 }
 
-.menu-item[aria-disabled="true"] {
+.menu_item[aria-disabled="true"] {
   opacity: 0.25;
   color: hsl(204 10% 10% / 0.3);
 }
 
-.menu-item[data-active-item] {
+.menu_item[data-active-item] {
   background-color: hsl(204 100% 40%);
   color: hsl(204 20% 100%);
 }
 
-.menu-item:active,
-.menu-item[data-active] {
+.menu_item:active,
+.menu_item[data-active] {
   background-color: hsl(204 100% 32%);
 }
 

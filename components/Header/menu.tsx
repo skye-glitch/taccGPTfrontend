@@ -10,7 +10,7 @@ export interface MenuProps extends ComponentPropsWithoutRef<"div"> {
   open?: boolean;
   setOpen?: (open: boolean) => void;
   label: ReactNode;
-  image?: ReactNode;
+  image?: string;
   disabled?: boolean;
   animate?: MotionProps["animate"];
   transition?: MotionProps["transition"];
@@ -64,7 +64,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
               />
             }
           >
-          <Ariakit.MenuArrow className={style.menu-arrow} />
+          <Ariakit.MenuArrow />
             {children}
           </Ariakit.Menu>
         )}
@@ -78,7 +78,7 @@ export const MenuItem = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
     return (
       <Ariakit.MenuItem
         ref={ref}
-        className={style.menu-item}
+        className={style.menu_item}
         render={<motion.div {...props} />}
       />
     );

@@ -87,7 +87,8 @@
   font-size: x-large;
   font-family: 'Times New Roman';
   resize: vertical;
-  
+  color: black;
+
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
