@@ -12,7 +12,7 @@ import style from "./DropDown.module.css"
 const Header = (props) => {
 
   return (
-    <nav className='fixed top-0 left-0 right-0 w-screen bg-white item-center tracking-wider z-10 shadow-md '>
+    <nav className='fixed top-0 left-0 right-0 w-full bg-white item-center tracking-wider z-10 shadow-md '>
       <div className='flex justify-between item-center w-full h-full px-2 2xl:px-8'>
         <Link href='/' as={'image'}>
           <Image src={Logo} alt='TACC-logo' className='cursor-pointer' height={80} priority={true} placeholder="blur" blurDataURL={'../../public/images/TACC-logo.svg'}></Image>

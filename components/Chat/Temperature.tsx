@@ -38,17 +38,17 @@ export const TemperatureSlider: FC<Props> = ({
         {/* {t(
           'Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.',
         )} */}
-        Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+        Higher values like 0.5 will make the output more random, while lower values like 0.01 will make it more focused and deterministic.
       </span>
       <span className="mt-2 mb-1 text-center text-neutral-900 dark:text-neutral-100">
-        {temperature.toFixed(1)}
+        {temperature.toFixed(2)}
       </span>
       <input
         className="cursor-pointer"
         type="range"
         min={0}
-        max={1}
-        step={0.1}
+        max={0.5}
+        step={0.01}
         value={temperature}
         onChange={handleChange}
       />

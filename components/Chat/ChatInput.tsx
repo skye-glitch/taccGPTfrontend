@@ -98,7 +98,7 @@ export const ChatInput = ({
     }
 
     // onSend({ role: 'user', content }, plugin);
-    onSend({ role: 'user', content }, null); // do not support plugin function
+    onSend({ role: 'Human', content }, null); // do not support plugin function
     setContent('');
     setPlugin(null);
 

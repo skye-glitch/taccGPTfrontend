@@ -78,28 +78,31 @@ const Home = ({
 
   const stopConversationRef = useRef<boolean>(false);
 
-  const { data, error, refetch } = useQuery(
-    ['GetModels', apiKey, serverSideApiKeyIsSet],
-    ({ signal }) => {
-      if (!apiKey && !serverSideApiKeyIsSet) return null;
+  // const { data, error, refetch } = useQuery(
+  //   ['GetModels', apiKey, serverSideApiKeyIsSet],
+  //   ({ signal }) => {
+  //     if (!apiKey && !serverSideApiKeyIsSet) return null;
 
-      return getModels(
-        {
-          key: apiKey,
-        },
-        signal,
-      );
-    },
-    { enabled: true, refetchOnMount: false },
-  );
+  //     return getModels(
+  //       {
+  //         key: apiKey,
+  //       },
+  //       signal,
+  //     );
+  //   },
+  //   { enabled: true, refetchOnMount: false },
+  // );
 
-  useEffect(() => {
-    if (data) dispatch({ field: 'models', value: data });
-  }, [data, dispatch]);
+  // useEffect(() => {
+  //   if (data) {
+  //     console.log("data: ",data);
+  //     dispatch({ field: 'models', value: data });
+  //   }
+  // }, [data, dispatch]);
 
-  useEffect(() => {
-    dispatch({ field: 'modelError', value: getModelsError(error) });
-  }, [dispatch, error, getModelsError]);
+  // useEffect(() => {
+  //   dispatch({ field: 'modelError', value: getModelsError(error) });
+  // }, [dispatch, error, getModelsError]);
 
   // FETCH MODELS ----------------------------------------------
 
@@ -262,23 +265,26 @@ const Home = ({
       });
     }
 
-    const apiKey = localStorage.getItem('apiKey');
+    // const apiKey = localStorage.getItem('apiKey');
 
-    if (serverSideApiKeyIsSet) {
-      dispatch({ field: 'apiKey', value: '' });
+    // Hard-code models aavailable
+    dispatch({ field: 'models', value: [{id:"opt-1.3b",name:"Finetuned OPT-1.3b"}] });
 
-      localStorage.removeItem('apiKey');
-    } else if (apiKey) {
-      dispatch({ field: 'apiKey', value: apiKey });
-    }
+    // if (serverSideApiKeyIsSet) {
+    //   dispatch({ field: 'apiKey', value: '' });
 
-    const pluginKeys = localStorage.getItem('pluginKeys');
-    if (serverSidePluginKeysSet) {
-      dispatch({ field: 'pluginKeys', value: [] });
-      localStorage.removeItem('pluginKeys');
-    } else if (pluginKeys) {
-      dispatch({ field: 'pluginKeys', value: pluginKeys });
-    }
+    //   localStorage.removeItem('apiKey');
+    // } else if (apiKey) {
+    //   dispatch({ field: 'apiKey', value: apiKey });
+    // }
+
+    // const pluginKeys = localStorage.getItem('pluginKeys');
+    // if (serverSidePluginKeysSet) {
+    //   dispatch({ field: 'pluginKeys', value: [] });
+    //   localStorage.removeItem('pluginKeys');
+    // } else if (pluginKeys) {
+    //   dispatch({ field: 'pluginKeys', value: pluginKeys });
+    // }
 
     if (window.innerWidth < 640) {
       dispatch({ field: 'showChatbar', value: false });
@@ -292,7 +298,7 @@ const Home = ({
 
     const showPromptbar = localStorage.getItem('showPromptbar');
     if (showPromptbar) {
-      dispatch({ field: 'showPromptbar', value: showPromptbar === 'true' });
+      dispatch({ field: 'showPromptbar', value: showPromptbar === 'false' });
     }
 
     const folders = localStorage.getItem('folders');
@@ -347,8 +353,8 @@ const Home = ({
   }, [
     defaultModelId,
     dispatch,
-    serverSideApiKeyIsSet,
-    serverSidePluginKeysSet,
+    // serverSideApiKeyIsSet,
+    // serverSidePluginKeysSet,
   ]);
 
   return (
@@ -376,14 +382,15 @@ const Home = ({
         <main
           className={`flex h-screen w-screen flex-col text-sm text-white dark:text-white ${lightMode} ` }
         >
-          <div className="fixed top-10 w-full sm:hidden">
+          {/* <div className="fixed top-10 w-full sm:hidden">
             <Navbar
               selectedConversation={selectedConversation}
               onNewConversation={handleNewConversation}
             />
-          </div>
+          </div> */}
+          <div></div>
 
-          <div className="flex h-full w-full pt-[48px] sm:pt-0 mt-20">
+          <div className="flex h-full w-full pt-20"> {/* pt-[48px]   */}
             <Chatbar />
 
             <div className="flex flex-1">

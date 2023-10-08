@@ -8,6 +8,7 @@ export interface OpenAIModel {
 }
 
 export enum OpenAIModelID {
+  TACC_GPT='opt-1.3b',
   GPT_3_5 = 'gpt-3.5-turbo',
   GPT_3_5_AZ = 'gpt-35-turbo',
   GPT_4 = 'gpt-4',
@@ -15,9 +16,15 @@ export enum OpenAIModelID {
 }
 
 // in case the `DEFAULT_MODEL` environment variable is not set or set to an unsupported model
-export const fallbackModelID = OpenAIModelID.GPT_3_5;
+export const fallbackModelID = OpenAIModelID.TACC_GPT;
 
 export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
+  [OpenAIModelID.TACC_GPT]: {
+    id: OpenAIModelID.TACC_GPT,
+    name: 'Finetuned OPT-1.3b',
+    maxLength: 12000,
+    tokenLimit: 512,
+  },
   [OpenAIModelID.GPT_3_5]: {
     id: OpenAIModelID.GPT_3_5,
     name: 'GPT-3.5',

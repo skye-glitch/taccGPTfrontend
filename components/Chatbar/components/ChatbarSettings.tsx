@@ -59,9 +59,9 @@ export const ChatbarSettings = () => {
       />
 
       {/* This is the button of "OpenAI API Key" on the sidebar */}
-      {!serverSideApiKeyIsSet ? (
+      {/* {!serverSideApiKeyIsSet ? (
         <Key apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
-      ) : null}
+      ) : null} */}
 
       {/* serverSidePluginKeysSet: Google Search Plugin keys */}
       {/* {!serverSidePluginKeysSet ? <PluginKeys /> : null} */}

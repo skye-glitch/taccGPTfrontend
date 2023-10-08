@@ -20,7 +20,7 @@ import {
 } from '@/utils/app/conversation';
 import { throttle } from '@/utils/data/throttle';
 
-import { ChatBody, Conversation, Message } from '@/types/chat';
+import { ChatBody, Conversation, Message, ChatBodyNew } from '@/types/chat';
 import { Plugin } from '@/types/plugin';
 
 import HomeContext from '@/pages/api/home/home.context';
@@ -34,9 +34,86 @@ import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
 import { MemoizedChatMessage } from './MemoizedChatMessage';
 
+import {
+  ParsedEvent,
+  ReconnectInterval,
+  createParser,
+} from 'eventsource-parser';
+
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
 }
+
+class OpenAIError extends Error {
+  type: string;
+  param: string;
+  code: string;
+
+  constructor(message: string, type: string, param: string, code: string) {
+    super(message);
+    this.name = 'OpenAIError';
+    this.type = type;
+    this.param = param;
+    this.code = code;
+  }
+}
+
+
+// async function toStream(res:Response) {
+//   const encoder = new TextEncoder();
+//   const decoder = new TextDecoder();
+
+//   if (res.status !== 200) {
+//     const result = await res.json();
+//     if (result.error) {
+//       throw new OpenAIError(
+//         result.error.message,
+//         result.error.type,
+//         result.error.param,
+//         result.error.code,
+//       );
+//     } else {
+//       throw new Error(
+//         `OpenAI API returned an error: ${
+//           decoder.decode(result?.value) || result.statusText
+//         }`,
+//       );
+//     }
+//   }
+
+//   const stream = new ReadableStream({
+//     async start(controller) {
+//       const onParse = (event: ParsedEvent | ReconnectInterval) => {
+//         if (event.type === 'event') {
+//           const data = event.data;
+
+//           try {
+//             const json = JSON.parse(data);
+//             if (json.choices[0].finish_reason != null) {
+//               controller.close();
+//               return;
+//             }
+//             const text = json.choices[0].delta.content;
+//             const queue = encoder.encode(text);
+//             controller.enqueue(queue);
+//           } catch (e) {
+//             controller.error(e);
+//           }
+//         }
+//       };
+
+//       const parser = createParser(onParse);
+
+//       console.log("Calling res.body in toStream")
+//       console.log(`res.body in toStream: `,res.body)
+//       for await (const chunk of res.body as any) {
+//         parser.feed(decoder.decode(chunk));
+//       }
+//     },
+//   });
+
+//   return stream;
+// }
 
 export const Chat = memo(({ stopConversationRef }: Props) => {
   const { t } = useTranslation('chat');
@@ -50,7 +127,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       pluginKeys,
       serverSideApiKeyIsSet,
       messageIsStreaming,
-      modelError,
+      // modelError,
       loading,
       prompts,
     },
@@ -93,28 +170,41 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         });
         homeDispatch({ field: 'loading', value: true });
         homeDispatch({ field: 'messageIsStreaming', value: true });
-        const chatBody: ChatBody = {
-          model: updatedConversation.model,
-          messages: updatedConversation.messages,
-          key: apiKey,
-          prompt: updatedConversation.prompt,
+        // const chatBody: ChatBody = {
+        //   model: updatedConversation.model,
+        //   messages: updatedConversation.messages,
+        //   key: apiKey,
+        //   prompt: updatedConversation.prompt,
+        //   temperature: updatedConversation.temperature,
+        // };
+        const chatBody: ChatBodyNew = {
           temperature: updatedConversation.temperature,
-        };
-        const endpoint = getEndpoint(plugin);
-        let body;
-        if (!plugin) {
-          body = JSON.stringify(chatBody);
-        } else {
-          body = JSON.stringify({
-            ...chatBody,
-            googleAPIKey: pluginKeys
-              .find((key) => key.pluginId === 'google-search')
-              ?.requiredKeys.find((key) => key.key === 'GOOGLE_API_KEY')?.value,
-            googleCSEId: pluginKeys
-              .find((key) => key.pluginId === 'google-search')
-              ?.requiredKeys.find((key) => key.key === 'GOOGLE_CSE_ID')?.value,
-          });
+          messages: updatedConversation.messages,
+          prompt: updatedConversation.prompt,
         }
+
+        // Cannot reuse the code in utils/server
+        // Will cause problems!
+        // const endpoint = getEndpoint(plugin);
+        const endpoint = '/TACC_GPT/chatbot/';
+        
+        // let body;
+        // if (!plugin) {
+        //   body = JSON.stringify(chatBody);
+        // } else {
+        //   body = JSON.stringify({
+        //     ...chatBody,
+        //     googleAPIKey: pluginKeys
+        //       .find((key) => key.pluginId === 'google-search')
+        //       ?.requiredKeys.find((key) => key.key === 'GOOGLE_API_KEY')?.value,
+        //     googleCSEId: pluginKeys
+        //       .find((key) => key.pluginId === 'google-search')
+        //       ?.requiredKeys.find((key) => key.key === 'GOOGLE_CSE_ID')?.value,
+        //   });
+        // }
+
+        // let body = JSON.stringify({"prompt":chatBody.messages[0].content,"numAnswers":1})
+        let body = JSON.stringify(chatBody)
         const controller = new AbortController();
         const response = await fetch(endpoint, {
           method: 'POST',
@@ -124,21 +214,29 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           signal: controller.signal,
           body,
         });
-        {`body: ${console.log(body)}`}
-        {`response: ${console.log(response)}`}
+        // This will extract the data in response
+        // e.g. if backend returns "Hello", then ressJson == "Hello"
+        // let resJson = await response.json();
+        // console.log(`resJson: ${resJson}`)
+
+        // const stream = await toStream(response);
+        // const res = new Response(stream);
         if (!response.ok) {
           homeDispatch({ field: 'loading', value: false });
           homeDispatch({ field: 'messageIsStreaming', value: false });
           toast.error(response.statusText);
           return;
         }
+        
         const data = response.body;
+
         if (!data) {
           homeDispatch({ field: 'loading', value: false });
           homeDispatch({ field: 'messageIsStreaming', value: false });
           return;
         }
         if (!plugin) {
+          // Update the name of this conversation in the chatbar
           if (updatedConversation.messages.length === 1) {
             const { content } = message;
             const customName =
@@ -154,6 +252,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           let done = false;
           let isFirst = true;
           let text = '';
+          let seenAssistant = false;
           while (!done) {
             if (stopConversationRef.current === true) {
               controller.abort();
@@ -161,15 +260,27 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               break;
             }
             const { value, done: doneReading } = await reader.read();
+            // if(typeof value == 'undefined') break; // EventSourceRespone's last char is undefined in js
             done = doneReading;
-            const chunkValue = decoder.decode(value);
-            text += chunkValue;
+            // EventSourceResponse always have format "data: realData\r\n\r\n"
+            // Since streaming only yield one char at a time, so only 6th char is used
+            const chunkValue = decoder.decode(value); 
+            let match = chunkValue.match(/data:\s+(\w+)/)
+            if(match !== null) {
+              const pingRegex = /(\s*:\s*ping\s*-\s*\d+-\d+-\d+\s+\d+:\d+:\d+.\d+)/
+              let chunkValueNoPing=chunkValue.replace(pingRegex,"")
+              let datas = chunkValueNoPing.replaceAll("\r\n","").split("data: ");
+              datas.forEach((item)=>{text += `${item} `})
+            }
+            
+
             if (isFirst) {
               isFirst = false;
               const updatedMessages: Message[] = [
                 ...updatedConversation.messages,
-                { role: 'assistant', content: chunkValue },
+                { role: 'Assistant', content: chunkValue },
               ];
+
               updatedConversation = {
                 ...updatedConversation,
                 messages: updatedMessages,
@@ -218,7 +329,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           const { answer } = await response.json();
           const updatedMessages: Message[] = [
             ...updatedConversation.messages,
-            { role: 'assistant', content: answer },
+            { role: 'Assistant', content: answer },
           ];
           updatedConversation = {
             ...updatedConversation,
@@ -268,7 +379,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       const { scrollTop, scrollHeight, clientHeight } =
         chatContainerRef.current;
       const bottomTolerance = 30;
-
       if (scrollTop + clientHeight < scrollHeight - bottomTolerance) {
         setAutoScrollEnabled(false);
         setShowScrollDownButton(true);
@@ -350,53 +460,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   }, [messagesEndRef]);
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541]">
-      {!(apiKey || serverSideApiKeyIsSet) ? (
-        <div className="mx-auto flex h-full w-[300px] flex-col justify-center space-y-6 sm:w-[600px]">
-          <div className="text-center text-4xl font-bold text-black dark:text-white">
-            Welcome to Chatbot UI
-          </div>
-          <div className="text-center text-lg text-black dark:text-white">
-            <div className="mb-8">{`Chatbot UI is an open source clone of OpenAI's ChatGPT UI.`}</div>
-            <div className="mb-2 font-bold">
-              Important: Chatbot UI is 100% unaffiliated with OpenAI.
-            </div>
-            <div className="mb-2">
-              This will be replaced with TACC GPT backend
-            </div>
-          </div>
-          <div className="text-center text-gray-500 dark:text-gray-400">
-            <div className="mb-2">
-              Chatbot UI allows you to plug in your API key to use this UI with
-              their API.
-            </div>
-            <div className="mb-2">
-              It is <span className="italic">only</span> used to communicate
-              with their API.
-            </div>
-            <div className="mb-2">
-              {/* {t(
-                'Please set your OpenAI API key in the bottom left of the sidebar.',
-              )} */}
-              Please set your OpenAI API key in the bottom left of the sidebar.
-            </div>
-            <div>
-              {/* {t("If you don't have an OpenAI API key, you can get one here: ")} */}
-              If you do not have an OpenAI API key, you can get one here: 
-              <a
-                href="https://platform.openai.com/account/api-keys"
-                target="_blank"
-                rel="noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                openai.com
-              </a>
-            </div>
-          </div>
-        </div>
-      ) : modelError ? (
-        <ErrorMessageDiv error={modelError} />
-      ) : (
+    <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541] ">
+      {(
         <>
           <div
             className="max-h-full overflow-x-hidden"
