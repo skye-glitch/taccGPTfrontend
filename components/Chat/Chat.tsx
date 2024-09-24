@@ -270,7 +270,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               const pingRegex = /(\s*:\s*ping\s*-\s*\d+-\d+-\d+\s+\d+:\d+:\d+.\d+)/
               let chunkValueNoPing=chunkValue.replace(pingRegex,"")
               let datas = chunkValueNoPing.replaceAll("\r\n","").split("data: ");
-              datas.forEach((item)=>{text += `${item} `})
+              datas.forEach((item)=>{text += `${item}`})
             }
             
 

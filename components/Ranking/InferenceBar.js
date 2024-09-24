@@ -55,6 +55,7 @@ const InferenceBar = props => {
       const failClassName    = style.loading_btn__fail;
       const elem = document.getElementById("submit_prompt_btn").querySelector("button");
       elem.classList.add(pendingClassName);
+      
 
       // for test locally only: http://localhost:9990/submit_prompt/
       axios.post('/TACC_GPT/submit_prompt/',{'prompt':prompt,'numAnswers':props.numAnswers, 'user':'Anonymous'}).then(res => {
@@ -84,7 +85,8 @@ const InferenceBar = props => {
           props.updatePrompt(prompt)
         }, stateDuration);
       }, stateDuration);
-
+      console.log("get answers",res.data.answers[0]);
+      console.log("compare length",res.data.answers.length, props.numAnswers)
         // console.assert(res.data.answers.length === props.numAnswers)
         // let newData = JSON.parse(JSON.stringify(props.data));
         // for(let i = 0; i < props.numAnswers*2; i++) {
